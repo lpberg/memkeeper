@@ -3,26 +3,25 @@ from flask import Flask, jsonify, render_template, request, redirect
 import sys
 import os
 
+# Helper Function
 def flaskprint(str):
 	print(str, file=sys.stderr)
 
+# Create Flask Application
 app = Flask(__name__)
 
+# Create Route for Index Page
 @app.route('/', methods=['GET'])
-def index():
-	return redirect("/platform/movies")
+def render_index_page():
+	return render_template("index.html")
 
-@app.route('/platform/<system>', methods=['GET'])
-def platform(system):
-	system = request.view_args['system']
-	return render_template("index.html",system=system,systems=systems)
+# Create Route for Test Post (data communication)
+@app.route('/test_post', methods=['POST'])
+def test_post():
+	response_data_dict = request.get_json()
+	flaskprint(response_data_dict)
+	return jsonify({'Flask Server':"POST Request was Successful"})
 
-@app.route('/<system>/add', methods=['POST'])
-def add(system):
-	title = request.form['title']
-	system = request.view_args['system']
-	c[system].add(title)
-	return jsonify({'output':"Added: " + title})
-
+# Run Flask Application
 if __name__ == "__main__":
 	app.run(host='0.0.0.0',debug=True,threaded=True,port=5005)

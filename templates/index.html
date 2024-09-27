@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Example POST Request with Flask Server</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="">
+<style>
+html,body {font-family:"Verdana",sans-serif}
+h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI",sans-serif}
+</style>
+<script>
+
+function sendPOSTRequest() {
+	fetch('/test_post', {
+	  method: 'POST',
+	  headers: {
+	    'Content-Type': 'application/json'
+	  },
+	  body: JSON.stringify({
+	    key1: 'value1',
+	    key2: 'value2'
+	  })
+	})
+	.then(response => {
+	  if (!response.ok) {
+	    throw new Error('Network response was not ok');
+	  }
+	  return response.json();
+	})
+	.then(data => {
+	  console.log(data);
+	})
+	.catch(error => {
+	  console.error('There has been a problem with your fetch operation:', error);
+	});
+}
+
+
+</script>
+<body>
+<h1>Example POST Request to Flask Server</h1>
+</p>Request Output Visible in Console.</p>
+<button onclick="sendPOSTRequest()">Send POST Request</button>
+
+</body>
+</html>
