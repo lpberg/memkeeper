@@ -9,38 +9,34 @@ html,body {font-family:"Verdana",sans-serif}
 h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI",sans-serif}
 </style>
 <script>
-
-function sendPOSTRequest() {
-	fetch('/test_post', {
+function sendPOSTRequest(endpoint,body) {
+	fetch(endpoint, {
 	  method: 'POST',
 	  headers: {
 	    'Content-Type': 'application/json'
 	  },
-	  body: JSON.stringify({
-	    key1: 'value1',
-	    key2: 'value2'
-	  })
-	})
-	.then(response => {
+	  body: JSON.stringify(body)
+	}).then(response => {
 	  if (!response.ok) {
 	    throw new Error('Network response was not ok');
 	  }
 	  return response.json();
-	})
-	.then(data => {
+	}).then(data => {
 	  console.log(data);
-	})
-	.catch(error => {
+	}).catch(error => {
 	  console.error('There has been a problem with your fetch operation:', error);
 	});
 }
-
-
 </script>
 <body>
 <h1>Example POST Request to Flask Server</h1>
 </p>Request Output Visible in Console.</p>
-<button onclick="sendPOSTRequest()">Send POST Request</button>
+</p>The MemoryCollection object has {{ num_items }} items.</p>
+
+<button onclick="sendPOSTRequest('/test_post',{title: 'value1',desc: 'value2'})">Send Test POST Request</button>
+<button onclick="sendPOSTRequest('/add',{title: 'value1',desc: 'value2'})">Add a Memory</button>
+<button onclick="sendPOSTRequest('/get',{id:'2148a02a-7d35-11ef-8aec-3352359860f8'})">Get Data From a Memory</button>
+<button onclick="sendPOSTRequest('/update',{id:'2148a02a-7d35-11ef-8aec-3352359860f8',title:'a new title', desc:'a new desc'})">Update a Memory</button>
 
 </body>
 </html>
