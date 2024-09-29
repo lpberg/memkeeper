@@ -7,7 +7,7 @@ import os
 def flaskprint(str):
 	print(str, file=sys.stderr)
 
-mc = MemoryCollection("data.flask.pickle")
+mc = MemoryCollection("memories")
 
 # Create Flask Application
 app = Flask(__name__)
@@ -37,7 +37,7 @@ def get():
 def update():
 	request_data = request.get_json()
 	mc.get(request_data["id"]).update({'title': request_data["title"], 'desc': request_data["desc"]})
-	mc.writeToFile()
+	mc.writeFile(mc.get(request_data["id"]))
 	return jsonify({'Flask Server':request_data["id"]+" updated"})
 
 # Create Route for Test Post (data communication)
