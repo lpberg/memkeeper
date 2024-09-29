@@ -20,7 +20,7 @@ class MemoryCollection:
 	def get_ids(self):
 		return(self.items.keys())
 	def writeFile(self,memory):
-		json_object = json.dumps(memory.__dict__, indent=4)
+		json_object = json.dumps(memory.get_data(), indent=4)
 		with open(self.memory_dir+"/"+memory.get_id()+".json", "w") as outfile:
 			outfile.write(json_object)
 	def writeFiles(self):
