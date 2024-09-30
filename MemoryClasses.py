@@ -6,37 +6,36 @@ import json
 class MemoryCollection:
 	def __init__(self,memory_dir="memories"):
 		self.memory_dir = memory_dir
-		self.items = {}
+		self.memories = {}
 		self.readFiles()
 	def get(self,id):
-		return(self.items[id])
+		return(self.memories[id])
 	def add(self,memory):
-		self.items[memory.get_id()] = memory
+		self.memories[memory.get_id()] = memory
 		self.writeFile(memory)
 	def remove(self,id):
-		self.items.pop(id)
+		self.memories.pop(id)
 	def get_size(self):
-		return(len(self.items))
+		return(len(self.memories))
 	def get_ids(self):
-		return(self.items.keys())
+		return(self.memories.keys())
 	def writeFile(self,memory):
-		json_object = json.dumps(memory.get_data(), indent=4)
-		with open(self.memory_dir+"/"+memory.get_id()+".json", "w") as outfile:
-			outfile.write(json_object)
+		filename = self.memory_dir+"/"+memory.get_id()+".json"
+		with open(filename, "w") as outfile:
+			outfile.write(json.dumps(memory.get_data(), indent=4))
 	def writeFiles(self):
-		for id, memory in self.items.items():
+		for id, memory in self.memories.items():
 			self.writeFile(memory)
 	def readFile(self,file):
-		with open(self.memory_dir+"/"+file, 'r') as openfile:
-			json_object = json.load(openfile)
-		memory = Memory(json_object)
-		self.add(memory)
+		filename = self.memory_dir+"/"+file
+		json_object_from_file = json.load(open(filename, 'r'))
+		self.add(Memory(json_object_from_file))
 	def readFiles(self):
 		for file in os.listdir(self.memory_dir):
 			if file.endswith('.json'):
 				self.readFile(file)
 
-class Memory():
+class Memory:
 	def __init__(self,data):
 		self.id = str(uuid.uuid1())
 		if "id" in data.keys():
@@ -45,6 +44,10 @@ class Memory():
 		self.desc = data["desc"]
 	def get_id(self):
 		return(self.id)
+	def get_title(self):
+		return(self.title)
+	def get_desc(self):
+		return(self.desc)
 	def update(self,data):
 		self.title = data["title"]
 		self.desc = data["desc"]
