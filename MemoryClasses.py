@@ -23,13 +23,16 @@ class MemoryCollection:
 		filename = self.memory_dir+"/"+memory.get_id()+".json"
 		with open(filename, "w") as outfile:
 			outfile.write(json.dumps(memory.get_data(), indent=4))
+		outfile.close()
 	def writeFiles(self):
 		for id, memory in self.memories.items():
 			self.writeFile(memory)
 	def readFile(self,file):
 		filename = self.memory_dir+"/"+file
-		json_object_from_file = json.load(open(filename, 'r'))
+		infile = open(filename, 'r')
+		json_object_from_file = json.load(infile)
 		self.add(Memory(json_object_from_file))
+		infile.close()
 	def readFiles(self):
 		for file in os.listdir(self.memory_dir):
 			if file.endswith('.json'):
