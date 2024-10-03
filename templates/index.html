@@ -9,6 +9,23 @@ html,body {font-family:"Verdana",sans-serif}
 h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI",sans-serif}
 </style>
 <script>
+function displayMemoryInfo() {
+    fetch('/get', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({'id':event.srcElement.dataset.memoryid})
+    }).then(response => {
+      if (!response.ok) {throw new Error('Network response was not ok');}
+      return response.json();
+    }).then(data => {
+		document.getElementById("id").innerText = data["id"];
+		document.getElementById("title").innerText = data["title"];
+		document.getElementById("description").innerText = data["desc"];
+    }).catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
 function sendPOSTRequest(endpoint,body) {
 	fetch(endpoint, {
 	  method: 'POST',
@@ -29,9 +46,31 @@ function sendPOSTRequest(endpoint,body) {
 }
 </script>
 <body>
-<h1>Example POST Request to Flask Server</h1>
-</p>Request Output Visible in Console.</p>
-</p>The MemoryCollection object has {{ num_items }} items.</p>
+<h1>MemKeeper</h1>
+<p>The memory folder has {{ num_items }} items.</p>
+<table>
+	<tr>
+		<th>ID</th>
+		<td id="id"></td>
+	</tr>
+	<tr>
+		<th>Title</th>
+		<td id="title"></td>
+	</tr>
+	<tr>
+		<th>Description</th>
+		<td id="description"></td>
+	</tr>
+</table>
+<hr>
+<table>
+	<th>Memory Titles</th>
+	{% for id,title in ids_titles.items() %}
+	<tr><td><a href='#' data-memoryid="{{id}}" onclick="displayMemoryInfo()">{{ title }}</a></td></tr>
+	{% endfor %}
+</table>
+
+<hr>
 
 <button onclick="sendPOSTRequest('/test_post',{title: 'value1',desc: 'value2'})">Send Test POST Request</button>
 <button onclick="sendPOSTRequest('/add',{title: 'value1',desc: 'value2'})">Add a Memory</button>

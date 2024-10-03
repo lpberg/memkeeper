@@ -20,7 +20,8 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def render_index_page():
 	# Respond to the GET request by rendering an html page
-	return render_template("index.html",num_items = mc.get_size())
+	ids_titles = mc.get_ids_titles()
+	return render_template("index.html",ids_titles = ids_titles, num_items = mc.get_size())
 
 # Create Route to Add a Memory
 @app.route('/add', methods=['POST'])

@@ -19,6 +19,11 @@ class MemoryCollection:
 		return(len(self.memories))
 	def get_ids(self):
 		return(self.memories.keys())
+	def get_ids_titles(self):
+		id_titles = {}
+		for id, memory in self.memories.items():
+			id_titles[id] = memory.get_title()
+		return(id_titles)
 	def writeFile(self,memory):
 		filename = self.memory_dir+"/"+memory.get_id()+".json"
 		with open(filename, "w") as outfile:
