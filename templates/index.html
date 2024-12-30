@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<meta charset="UTF-8">
-<title>Example POST Request with Flask Server</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="">
-<style>
-html,body {font-family:"Verdana",sans-serif}
-h1,h2,h3,h4,h5,h6 {font-family:"Segoe UI",sans-serif}
-</style>
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>{% block title %} Index {% endblock %}</h3>
+<p>Hello, World!</p>
+{% endblock %}
 <script>
+
 function displayMemoryInfo() {
     fetch('/get', {
       method: 'POST',
@@ -18,9 +15,9 @@ function displayMemoryInfo() {
       if (!response.ok) {throw new Error('Network response was not ok');}
       return response.json();
     }).then(data => {
-		document.getElementById("id").innerText = data["id"];
-		document.getElementById("title").innerText = data["title"];
-		document.getElementById("description").innerText = data["desc"];
+		document.getElementById("update_form_id").value = data["id"];
+		document.getElementById("update_form_title").value = data["title"];
+		document.getElementById("update_form_desc").value = data["desc"];
     }).catch(error => {
       console.error('There has been a problem with your fetch operation:', error);
     });
@@ -29,39 +26,43 @@ function displayMemoryInfo() {
 function sendPOSTRequest(endpoint,body) {
 	fetch(endpoint, {
 	  method: 'POST',
-	  headers: {
-	    'Content-Type': 'application/json'
-	  },
+	  headers: {'Content-Type': 'application/json'},
 	  body: JSON.stringify(body)
 	}).then(response => {
-	  if (!response.ok) {
-	    throw new Error('Network response was not ok');
-	  }
+	  if (!response.ok) {throw new Error('Network response was not ok');}
 	  return response.json();
 	}).then(data => {
 	  console.log(data);
-	}).catch(error => {
-	  console.error('There has been a problem with your fetch operation:', error);
-	});
+	}).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
 }
+
+function addMemory() {
+	data = {"title":document.getElementById("form_title").value,
+			"desc": document.getElementById("form_desc").value}
+	sendPOSTRequest("/add",data)
+}
+
+function updateMemory() {
+    data = {"title":document.getElementById("update_form_title").value,
+            "id": document.getElementById("update_form_id").value,
+            "desc": document.getElementById("update_form_desc").value}
+    sendPOSTRequest("/update",data)
+}
+
 </script>
-<body>
 <h1>MemKeeper</h1>
 <p>The memory folder has {{ num_items }} items.</p>
-<table>
-	<tr>
-		<th>ID</th>
-		<td id="id"></td>
-	</tr>
-	<tr>
-		<th>Title</th>
-		<td id="title"></td>
-	</tr>
-	<tr>
-		<th>Description</th>
-		<td id="description"></td>
-	</tr>
-</table>
+
+<form>
+  <label for="update_form_id">ID:</label><br>
+  <input type="text" id="update_form_id"><br>
+  <label for="update_form_title">Title:</label><br>
+  <input type="text" id="update_form_title"><br>
+  <label for="update_form_desc">Description:</label><br>
+  <textarea cols="60" rows="6"  id="update_form_desc"></textarea><br><br>
+  <input type="button" onclick="updateMemory()" id="update_form_submit" value="Submit">
+</form>
+
 <hr>
 <table>
 	<th>Memory Titles</th>
@@ -70,6 +71,13 @@ function sendPOSTRequest(endpoint,body) {
 	{% endfor %}
 </table>
 
+<form>
+  <label for="form_title">Title:</label><br>
+  <input type="text" id="form_title" name="fname" value="John"><br>
+  <label for="form_desc">Description:</label><br>
+  <textarea cols="60" rows="6"  id="form_desc"></textarea><br><br>
+  <input type="button" onclick="addMemory()" id="form_submit" value="Submit">
+</form> 
 <hr>
 
 <button onclick="sendPOSTRequest('/test_post',{title: 'value1',desc: 'value2'})">Send Test POST Request</button>

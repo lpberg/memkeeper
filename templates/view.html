@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% set active_page = "view" %}
+{% block title %}View Memories{% endblock %}
+
+{% block content %}
+
+<table>
+	<th>Memories</th>
+	{% for id,title in ids_titles.items() %}
+	<tr>
+		<td><a href='/view/{{id}}'>{{ title }}</a></td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

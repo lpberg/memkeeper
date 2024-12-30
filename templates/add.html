@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% set active_page = "add" %}
+
+{% block title %}Add a Memory{% endblock %}
+
+{% block content %}
+
+<script>
+function sendPOSTRequest(endpoint,body) {
+	fetch(endpoint, {
+	  method: 'POST',
+	  headers: {'Content-Type': 'application/json'},
+	  body: JSON.stringify(body)
+	}).then(response => {
+	  if (!response.ok) {throw new Error('Network response was not ok');}
+	  return response.json();
+	}).then(data => {
+	  console.log(data);
+	}).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
+}
+
+function addMemory() {
+	data = {"title":document.getElementById("form_title").value,
+			"desc": document.getElementById("form_desc").value}
+	sendPOSTRequest("/add_memory",data)
+	// Redirect to root / view page
+	window.location.replace("/");
+
+}
+</script>
+
+<form>
+  <label for="form_title">Title:</label><br>
+  <input type="text" id="form_title" name="fname" value="John"><br>
+  <label for="form_desc">Description:</label><br>
+  <textarea cols="60" rows="6"  id="form_desc"></textarea><br><br>
+  <input type="button" onclick="addMemory()" id="form_submit" value="Submit">
+</form> 
+
+{% endblock %}

@@ -16,40 +16,50 @@ mc = MemoryCollection("memories")
 # Create Flask Application
 app = Flask(__name__)
 
-# Create Route for Index Page
+# Redirect root to view
 @app.route('/', methods=['GET'])
 def render_index_page():
-	# Respond to the GET request by rendering an html page
-	ids_titles = mc.get_ids_titles()
-	return render_template("index.html",ids_titles = ids_titles, num_items = mc.get_size())
+	return redirect("/view")
+
+# Create Route for Index Page
+@app.route('/view', methods=['GET'])
+def render_view_page():
+	return render_template("view.html",ids_titles = mc.get_ids_titles())
+
+# Create Route for Add Page
+@app.route('/add', methods=['GET'])
+def render_add_page():
+    return render_template("add.html")
+
+# Create Route for Add Page
+@app.route('/view/<id>', methods=['GET'])
+def render_view_single_page(id):
+	id = request.view_args['id']
+	data = mc.get(id).get_data()
+	return render_template("view_single.html",title = data["title"],description = data["desc"])
 
 # Create Route to Add a Memory
-@app.route('/add', methods=['POST'])
-def add():
-	# data from the request is stored in request_data variable
-	request_data = request.get_json()
-	# request_data used an input parameters for new Memory object
-	memory = Memory(request_data)
-	# new memory object added to MemoryCollection object
-	mc.add(memory)
-	# Flask sends a response to request
-	return jsonify({'Flask Server':"Memory "+memory.get_id()+" added"})
+@app.route('/add_memory', methods=['POST'])
+def add_memory():
+	if request.method == "POST":
+		request_data = request.get_json()
+		memory = Memory(request_data)
+		mc.add(memory)
+		return jsonify({'Flask Server':"Memory "+memory.get_id()+" added"})
 
 # Create Route to get Data for a Memory (via a Memory ID)
-@app.route('/get', methods=['POST'])
-def get():
+@app.route('/get_memory', methods=['POST'])
+def get_memory():
 	request_data = request.get_json()
 	# the 'id' key from the request_data is used to lookup the Memory object, then the get_data() method returns the data from the object
 	data = mc.get(request_data["id"]).get_data()
 	return jsonify(data)
 
 # Create Route to Update a Memory
-@app.route('/update', methods=['POST'])
-def update():
+@app.route('/update_memory', methods=['POST'])
+def update_memeory():
 	request_data = request.get_json()
-	# Look up Memory object in MemoryCollection object. Call Update with new set of values from the request
 	mc.get(request_data["id"]).update({'title': request_data["title"], 'desc': request_data["desc"]})
-	# Write the updated Memory to a file for long term storage
 	mc.writeFile(mc.get(request_data["id"]))
 	return jsonify({'Flask Server':request_data["id"]+" updated"})
 
