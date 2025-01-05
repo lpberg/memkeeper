@@ -4,7 +4,15 @@
 
 {% block content %}
 
-<b>{{ title }}</b>
-<p>{{ description }}</p>
+<div class="columns">
+	<div class="column is-two-fifths memory-form">
+		<div class="brand">MemKeeper</div>
+		{% include "add_form.html" %}
+	</div>
+	<div class="column memories single">
+		<h1 class="title">{{ title }}</h1>
+    <p>{{ description }}</p>
+	</div>
+</div>
 
 {% endblock %}

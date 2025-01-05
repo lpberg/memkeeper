@@ -1,0 +1,81 @@
+// @use "bulma/sass/grid/columns";
+// @use "bulma/sass/form";
+
+// Load Bulma's base styles and themes (including the minireset)
+// @use "bulma/sass/base";
+// @use "bulma/sass/themes";
+
+// // Load other Bulma components
+// @use "bulma/sass/elements/button";
+// @use "bulma/sass/components/message";
+
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Borel&family=Karla:ital,wght@0,200..800;1,200..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+
+html,
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+.memory-form {
+  background-color: #FFEECE;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 8rem;
+  
+  .brand {
+    font-size: 3.5rem;
+    font-family: "Borel", serif;
+    font-weight: 600;
+  }
+}
+
+.memories {
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+
+  > div {
+    width: 100%;
+  }
+
+  .columns {
+    flex-wrap: wrap;
+    display: block;
+    
+    .column {
+      flex-grow: 0;
+      flex-basis: 50%;
+      padding: 0.75rem;
+    }
+  }
+
+  &.single {
+    display: block;
+  }
+}
+
+.card {
+  border-radius: 0;
+  box-shadow: none;
+  // box-shadow: 0 2px 1px #f2f4f6;
+  // border: 1px solid #f2f4f6;
+  border-bottom: 2px solid #f2f4f6;
+
+  .card-content {
+    padding-left: 0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+
+
+

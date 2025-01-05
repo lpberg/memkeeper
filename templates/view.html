@@ -5,13 +5,27 @@
 
 {% block content %}
 
-<table>
-	<th>Memories</th>
-	{% for id,title in ids_titles.items() %}
-	<tr>
-		<td><a href='/view/{{id}}'>{{ title }}</a></td>
-	</tr>
-	{% endfor %}
-</table>
+<div class="columns">
+	<div class="column is-two-fifths memory-form">
+		<div class="brand">MemKeeper</div>
+		{% include "add_form.html" %}
+	</div>
+	<div class="column memories">
+		<div>
+		<h1 class="title">Memories</h1>
+		<div class="columns">
+		{% for id,title in ids_titles.items() %}
+		<div class="column">
+		<div class="card">
+			<div class="card-content">
+				<h2 class="subtitle"><a href='/view/{{id}}'>{{ title }}</a></h2>
+			</div>
+		</div>
+		</div>
+		{% endfor %}
+		</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
