@@ -12,18 +12,19 @@
 	</div>
 	<div class="column memories">
 		<div>
-		<h1 class="title">Memories</h1>
-		<div class="columns">
-		{% for id,title in ids_titles.items() %}
-		<div class="column">
-		<div class="card">
-			<div class="card-content">
-				<h2 class="subtitle"><a href='/view/{{id}}'>{{ title }}</a></h2>
+			<h1 class="title">Memories</h1>
+			<div class="columns">
+			{% for id,title in ids_titles.items() %}
+			<div class="column">
+				<div class="card">
+					<div class="card-content">
+						<h2 class="subtitle"><a href='/view/{{id}}'>{{ title }}</a></h2>
+						{{ desc }}
+					</div>
+				</div>
 			</div>
-		</div>
-		</div>
-		{% endfor %}
-		</div>
+			{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>

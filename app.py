@@ -24,7 +24,7 @@ def render_index_page():
 # Create Route for Index Page
 @app.route('/view', methods=['GET'])
 def render_view_page():
-	return render_template("view.html",ids_titles = mc.get_ids_titles())
+	return render_template("view.html",ids_titles = mc.get_ids_titles(), ids_descriptions = mc.get_ids_descriptions)
 
 # Create Route for Add Page
 @app.route('/add', methods=['GET'])
