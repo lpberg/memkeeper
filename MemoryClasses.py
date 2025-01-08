@@ -2,6 +2,7 @@ import os
 import sys
 import uuid
 import json
+from datetime import datetime
 
 class MemoryCollection:
 	def __init__(self,memory_dir="memories"):
@@ -51,8 +52,11 @@ class MemoryCollection:
 class Memory:
 	def __init__(self,data):
 		self.id = str(uuid.uuid1())
+		self.dt = datetime.now()
 		if "id" in data.keys():
 			self.id = data["id"]
+		if "dt" in data.keys():
+			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
 		self.title = data["title"]
 		self.desc = data["desc"]
 	def get_id(self):
@@ -61,8 +65,14 @@ class Memory:
 		return(self.title)
 	def get_desc(self):
 		return(self.desc)
+	def get_dt(self):
+		return(self.dt)
+	def get_dt_str(self):
+		return(self.dt.strftime("%m/%d/%Y %H:%M:%S"))
 	def update(self,data):
 		self.title = data["title"]
 		self.desc = data["desc"]
+		if "dt" in data.keys():
+			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
 	def get_data(self):
-		return({"title":self.title,"desc":self.desc,"id":self.id})
+		return({"title":self.title,"desc":self.desc,"id":self.id,"dt":self.get_dt_str()})
