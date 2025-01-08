@@ -4,21 +4,45 @@
 {% block title %}View Memories{% endblock %}
 
 {% block content %}
+<script>
+function requestData(endpoint,body) {
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    }).then(response => {
+      if (!response.ok) {throw new Error('Network response was not ok');}
+      return response.json();
+    }).then(data => {
+	  updateHTML(data)
+    }).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
+}
 
+function updateHTML(data) {
+   document.getElementById("mem_item").innerHTML = data["title"]+data["desc"]+data["dt"];
+}
+
+function viewMemory(e) {
+    data = {"id":e.getAttribute("data-memoryid")}
+    requestData("/get_memory",data)
+}
+</script>
 <div class="columns">
 	<div class="column is-two-fifths memory-form">
 		<div class="brand">MemKeeper</div>
 		{% include "add_form.html" %}
 	</div>
 	<div class="column memories">
-		<div>
+		<div id="mem_item">
+		</div>
+		<div id="mem_list">
 			<h1 class="title">Memories</h1>
 			<div class="columns">
 			{% for id,title in ids_titles.items() %}
 			<div class="column">
 				<div class="card">
 					<div class="card-content">
-						<h2 class="subtitle"><a href='/view/{{id}}'>{{ title }}</a></h2>
+						<h2 class="subtitle"><a data-memoryid="{{ id }}" onclick="viewMemory(this)">{{ title }}</a></h2>
 						{{ ids_descriptions[id] }}
 					</div>
 				</div>
