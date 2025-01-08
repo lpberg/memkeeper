@@ -1,2 +1,4 @@
 __pycache__/
 *.json
+node_modules
+static/styles.css.map
