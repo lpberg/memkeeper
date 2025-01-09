@@ -20,6 +20,11 @@ class MemoryCollection:
 		return(len(self.memories))
 	def get_ids(self):
 		return(self.memories.keys())
+	def get_data(self):
+		data = {}
+		for id, memory in self.memories.items():
+			data[id] = memory.get_data()
+		return(data)
 	def get_ids_titles(self):
 		id_titles = {}
 		for id, memory in self.memories.items():
@@ -52,9 +57,12 @@ class MemoryCollection:
 class Memory:
 	def __init__(self,data):
 		self.id = str(uuid.uuid1())
+		self.created_dt = datetime.now()
 		self.dt = datetime.now()
 		if "id" in data.keys():
 			self.id = data["id"]
+		if "created_dt" in data.keys():
+			self.created_dt = datetime.strptime(data["created_dt"], "%m/%d/%Y %H:%M:%S")
 		if "dt" in data.keys():
 			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
 		self.title = data["title"]
@@ -69,10 +77,16 @@ class Memory:
 		return(self.dt)
 	def get_dt_str(self):
 		return(self.dt.strftime("%m/%d/%Y %H:%M:%S"))
+	def get_created_dt(self):
+		return(self.created_dt)
+	def get_created_dt_str(self):
+		return(self.created_dt.strftime("%m/%d/%Y %H:%M:%S"))
 	def update(self,data):
 		self.title = data["title"]
 		self.desc = data["desc"]
+		if "created_dt" in data.keys():
+			self.created_dt = datetime.strptime(data["created_dt"], "%m/%d/%Y %H:%M:%S")
 		if "dt" in data.keys():
 			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
 	def get_data(self):
-		return({"title":self.title,"desc":self.desc,"id":self.id,"dt":self.get_dt_str()})
+		return({"title":self.title,"desc":self.desc,"id":self.id,"created_dt":self.get_created_dt_str(),"dt":self.get_dt_str()})
