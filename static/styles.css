@@ -1,5 +1,10 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css";
 @import url("https://fonts.googleapis.com/css2?family=Borel&family=Karla:ital,wght@0,200..800;1,200..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+}
+
 html,
 body {
   margin: 0;
@@ -14,24 +19,37 @@ h1, h2 {
   font-family: "Lato", sans-serif;
 }
 
-.memory-form {
+.memory-form-col {
   background-color: #FFEECE;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: 0 8rem;
 }
-.memory-form .brand {
-  font-size: 3.5rem;
+.memory-form-col .memory-form {
+  position: fixed;
+  top: 20%;
+}
+.memory-form-col .memory-form .button {
+  width: 100%;
+  display: block;
+  margin: 1rem 0;
+}
+.memory-form-col .brand {
   font-family: "Borel", serif;
   font-weight: 600;
+}
+.memory-form-col .brand {
+  font-size: 3.5rem;
+}
+.memory-form-col h2 {
+  font-size: 1.825rem;
+  margin-top: 3rem;
 }
 
 .memories {
   padding: 4rem;
   display: flex;
-  align-items: center;
 }
 .memories > div {
   width: 100%;

@@ -31,15 +31,21 @@ function toggleMemoryList() {
    document.getElementById("mem_list").hidden = !document.getElementById("mem_list").hidden;
 }
 </script> 
-<div class="columns">
-	<div class="column is-two-fifths memory-form">
-		<div class="brand">MemKeeper</div>
-		{% include "add_form.html" %}
-		<input type="button" onclick="toggleMemoryList()" value="Toggle List" class="button is-link is-medium">
+<div class="columns wrapper">
+	<div class="column is-two-fifths memory-form-col">
+		<div class="memory-form">
+			<div class="brand">MemKeeper</div>
+			<label class="checkbox">
+				<input type="checkbox" onchange="toggleMemoryList()" />
+				Toggle memories
+			</label>
+			<h2 class="title">Add New</h2>
+			{% include "add_form.html" %}
+			<!-- <input type="button" onclick="toggleMemoryList()" value="Toggle List" class="button is-link is-medium"> -->
+			
+		</div>
 	</div>
 	<div class="column memories">
-		<div id="mem_item">
-		</div>
 		<div id="mem_list">
 			<h1 class="title">Memories</h1>
 			<div class="columns">
@@ -51,12 +57,14 @@ function toggleMemoryList() {
 						<p>{{ memory.desc }}</p> 
 						<p>{{ memory.dt }}</p>
 						<p>{{ memory.created_dt }}</p>
-						<p>{{ memory.img_paths }}</p>
+						<img src="{{memory.img_paths[0]}}" />
 					</div>
 				</div>
 			</div>
 			{% endfor %}
 			</div>
+		</div>
+		<div id="mem_item">
 		</div>
 	</div>
 </div>

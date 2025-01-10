@@ -19,9 +19,9 @@ function add_memory() {
 
 <form class="mt-5" method="post" enctype="multipart/form-data" id="formed">
 <label for="form_title" class="label is-medium">Title:</label>
-<input type="text" id="form_title" name="fname" class="input is-medium">
+<input type="text" id="form_title" name="fname" class="input is-medium" required>
 <label for="form_desc" class="label mt-5 is-medium">Description:</label>
 <textarea cols="60" rows="6"  id="form_desc" class="textarea is-medium mb-5"></textarea>
 <input type=file id=file1 name=file1>
-<input type="button" onclick="add_memory()" id="form_submit" value="Add Memory" class="button is-link is-medium">
+<input type="button" onclick="add_memory()" id="form_submit" value="Add Memory" class="button is-link is-medium is-block">
 </form> 
