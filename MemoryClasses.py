@@ -25,18 +25,8 @@ class MemoryCollection:
 		for id, memory in self.memories.items():
 			data[id] = memory.get_data()
 		return(data)
-	def get_ids_titles(self):
-		id_titles = {}
-		for id, memory in self.memories.items():
-			id_titles[id] = memory.get_title()
-		return(id_titles)
-	def get_ids_descriptions(self):
-		id_descriptions = {}
-		for id, memory in self.memories.items():
-			id_descriptions[id] = memory.get_desc()
-		return(id_descriptions)
 	def writeFile(self,memory):
-		filename = self.memory_dir+"/"+memory.get_id()+".json"
+		filename = self.memory_dir+"/"+str(memory.get_id())+".json"
 		with open(filename, "w") as outfile:
 			outfile.write(json.dumps(memory.get_data(), indent=4))
 		outfile.close()
@@ -59,12 +49,18 @@ class Memory:
 		self.id = str(uuid.uuid1())
 		self.created_dt = datetime.now()
 		self.dt = datetime.now()
+		self.img_paths = []
 		if "id" in data.keys():
 			self.id = data["id"]
 		if "created_dt" in data.keys():
 			self.created_dt = datetime.strptime(data["created_dt"], "%m/%d/%Y %H:%M:%S")
 		if "dt" in data.keys():
 			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
+		if "img_paths" in data.keys():
+			if len(data["img_paths"])>0:
+				for path in data["img_paths"]:
+					if path not in self.img_paths:
+						self.img_paths.append(path)
 		self.title = data["title"]
 		self.desc = data["desc"]
 	def get_id(self):
@@ -82,11 +78,16 @@ class Memory:
 	def get_created_dt_str(self):
 		return(self.created_dt.strftime("%m/%d/%Y %H:%M:%S"))
 	def update(self,data):
-		self.title = data["title"]
-		self.desc = data["desc"]
+		if "title" in data.keys():
+			self.title = data["title"]
+		if "desc" in data.keys():
+			self.desc = data["desc"]
 		if "created_dt" in data.keys():
 			self.created_dt = datetime.strptime(data["created_dt"], "%m/%d/%Y %H:%M:%S")
 		if "dt" in data.keys():
 			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
+		if "img_paths" in data.keys():
+			# TODO: Consider overwriting list vs conditional appending
+			self.img_paths = data["img_paths"]
 	def get_data(self):
-		return({"title":self.title,"desc":self.desc,"id":self.id,"created_dt":self.get_created_dt_str(),"dt":self.get_dt_str()})
+		return({"title":self.title,"desc":self.desc,"id":self.id,"created_dt":self.get_created_dt_str(),"dt":self.get_dt_str(),"img_paths":self.img_paths})
