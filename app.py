@@ -21,7 +21,7 @@ app = Flask(__name__)
 # Set upload directory
 # TODO: enforce image file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = './static/img'
+app.config['UPLOAD_FOLDER'] = './static/uploads/images'
 
 # Redirect root to view
 @app.route('/', methods=['GET'])
