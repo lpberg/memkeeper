@@ -92,8 +92,6 @@ h1, h2 {
 .card {
   border-radius: 0;
   box-shadow: none;
-  // box-shadow: 0 2px 1px #f2f4f6;s
-  // border: 1px solid #f2f4f6;
   border-bottom: 2px solid #f2f4f6;
 
   .card-content {
@@ -102,6 +100,9 @@ h1, h2 {
   }
 }
 
+.help {
+  font-size: 1rem;
+}
 
 
 

@@ -1,27 +1,52 @@
 <script>
 function add_memory() {
 	const formData = new FormData();
-	formData.append('title', document.getElementById("form_title").value);
-	formData.append('desc', document.getElementById("form_desc").value);
-	formData.append('file1',document.querySelector('input[type="file"]').files[0]);
-	fetch('/add_memory', {
-  		method: 'POST',
-  		body: formData
-	}).then(response => {
-  		if (!response.ok) {throw new Error('Network response was not ok');}
-  		return response.json();
-	}).then(data => {
-		window.location.replace("/");
-  		console.log(data);
-	}).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
+  const title = document.getElementById("form_title");
+  const desc = document.getElementById("form_desc");
+  const imgFile = document.querySelector('input[type="file"]');
+  const required = document.querySelectorAll('[required]')
+
+	formData.append('title', title.value);
+	formData.append('desc', desc.value);
+	formData.append('file1', imgFile.files[0]);
+  
+  required.forEach((e) => {
+    if(!e.value) {
+      let inlineErrorMsg = document.createElement('p');
+      inlineErrorMsg.classList.add('is-danger', 'help');
+      inlineErrorMsg.innerHTML = 
+      `
+        ${e.previousElementSibling.innerHTML} is required
+      `
+      e.classList.add('is-danger');
+      e.parentElement.appendChild(inlineErrorMsg);
+      return false;
+    } else {
+      fetch('/add_memory', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (!response.ok) {throw new Error('Network response was not ok');}
+        return response.json();
+    }).then(data => {
+      window.location.replace("/");
+        console.log(data);
+    }).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
+    }
+  })
 }
 </script>
-
 <form class="mt-5" method="post" enctype="multipart/form-data" id="formed">
-<label for="form_title" class="label is-medium">Title:</label>
-<input type="text" id="form_title" name="fname" class="input is-medium" required>
-<label for="form_desc" class="label mt-5 is-medium">Description:</label>
-<textarea cols="60" rows="6"  id="form_desc" class="textarea is-medium mb-5"></textarea>
-<input type=file id=file1 name=file1>
-<input type="button" onclick="add_memory()" id="form_submit" value="Add Memory" class="button is-link is-medium is-block">
+  <div class="field">
+    <label for="form_title" class="label is-medium">Title</label>
+    <input type="text" id="form_title" name="fname" class="input is-medium" required>
+  </div>
+  <div class="field">
+    <label for="form_desc" class="label mt-5 is-medium">Description</label>
+    <textarea cols="60" rows="6"  id="form_desc" class="textarea is-medium" required></textarea>
+  </div>
+  <div class="field">
+    <input type=file id=file1 name=file1>
+    <input type="button" onclick="add_memory()" id="form_submit" value="Add Memory" class="button is-link is-medium is-block">
+  </div>
 </form> 
