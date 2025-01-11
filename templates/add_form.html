@@ -1,39 +1,46 @@
 <script>
+function validate_fields() {
+  	const required = document.querySelectorAll('[required]')
+	let fields_valid = true;
+	required.forEach((e) => {
+		if(!e.value) {
+      		let inlineErrorMsg = document.createElement('p');
+	  		inlineErrorMsg.classList.add('is-danger', 'help');
+  			inlineErrorMsg.innerHTML =
+  			`
+    			${e.previousElementSibling.innerHTML} is required
+  			`
+  			e.classList.add('is-danger');
+  			e.parentElement.appendChild(inlineErrorMsg);
+  			fields_valid = false;
+		}	
+	})
+	return fields_valid;
+}
+
+
 function add_memory() {
 	const formData = new FormData();
-  const title = document.getElementById("form_title");
-  const desc = document.getElementById("form_desc");
-  const imgFile = document.querySelector('input[type="file"]');
-  const required = document.querySelectorAll('[required]')
+  	const title = document.getElementById("form_title");
+  	const desc = document.getElementById("form_desc");
+  	const imgFile = document.querySelector('input[type="file"]');
 
 	formData.append('title', title.value);
 	formData.append('desc', desc.value);
 	formData.append('file1', imgFile.files[0]);
-  
-  required.forEach((e) => {
-    if(!e.value) {
-      let inlineErrorMsg = document.createElement('p');
-      inlineErrorMsg.classList.add('is-danger', 'help');
-      inlineErrorMsg.innerHTML = 
-      `
-        ${e.previousElementSibling.innerHTML} is required
-      `
-      e.classList.add('is-danger');
-      e.parentElement.appendChild(inlineErrorMsg);
-      return false;
-    } else {
-      fetch('/add_memory', {
-        method: 'POST',
-        body: formData
-    }).then(response => {
+
+	if (validate_fields()) {
+		fetch('/add_memory', {
+		    method: 'POST',
+        	body: formData
+		}).then(response => {
         if (!response.ok) {throw new Error('Network response was not ok');}
-        return response.json();
-    }).then(data => {
-      window.location.replace("/");
-        console.log(data);
-    }).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
-    }
-  })
+        	return response.json();
+    	}).then(data => {
+        	window.location.replace("/");
+        	console.log(data);
+    	}).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
+  	}
 }
 </script>
 <form class="mt-5" method="post" enctype="multipart/form-data" id="formed">
