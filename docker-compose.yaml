@@ -1,0 +1,12 @@
+---
+services:
+  py-memkeeper:
+    image: py-memkeeper
+    container_name: py-memkeeper
+    network_mode: host
+    volumes:
+      - ./memories:/app/memories
+      - ./static/uploads:/app/static/uploads
+    ports:
+      - 5002:5002
+    restart: unless-stopped
