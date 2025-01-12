@@ -24,7 +24,7 @@ function updateHTML(data) {
 
 function viewMemory(e) {
     data = {"id":e.getAttribute("data-memoryid")}
-    requestData("/get_memory",data)
+    requestData("/memory/get",data)
 }
 
 function toggleMemoryList() {

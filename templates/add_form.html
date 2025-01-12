@@ -3,8 +3,15 @@ function add_memory() {
 	const formData = new FormData();
 	formData.append('title', document.getElementById("form_title").value);
 	formData.append('desc', document.getElementById("form_desc").value);
-	formData.append('file1',document.querySelector('input[type="file"]').files[0]);
-	fetch('/add_memory', {
+
+	let files = document.querySelector('input[type="file"]').files
+	if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          formData.append('file'+i, files[i]);
+        }
+	}
+
+	fetch('/memory/add', {
   		method: 'POST',
   		body: formData
 	}).then(response => {
@@ -12,7 +19,6 @@ function add_memory() {
   		return response.json();
 	}).then(data => {
 		window.location.replace("/");
-  		console.log(data);
 	}).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
 }
 </script>
@@ -22,6 +28,6 @@ function add_memory() {
 <input type="text" id="form_title" name="fname" class="input is-medium" required>
 <label for="form_desc" class="label mt-5 is-medium">Description:</label>
 <textarea cols="60" rows="6"  id="form_desc" class="textarea is-medium mb-5"></textarea>
-<input type=file id=file1 name=file1>
+<input type=file id=file1 name=file1 multiple>
 <input type="button" onclick="add_memory()" id="form_submit" value="Add Memory" class="button is-link is-medium is-block">
 </form> 
