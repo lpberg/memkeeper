@@ -1,6 +1,8 @@
 # Import / Load Libraries
 from flask import Flask, jsonify, render_template, request, redirect
 from werkzeug.utils import secure_filename
+# Import variable file
+import memkeeper_vars
 import uuid
 import sys
 import os
@@ -12,13 +14,13 @@ def flaskprint(str):
 	print(str, file=sys.stderr)
 
 # Create MemoryCollection Object (helps read/write/manage Memory objects)
-mc = MemoryCollection("memories")
+mc = MemoryCollection(memkeeper_vars.memories_dir)
 
 # Create Flask Application
 app = Flask(__name__)
 
 # Set upload directory - flask requires use of static dir
-app.config['UPLOAD_FOLDER'] = './static/uploads/images'
+app.config['UPLOAD_FOLDER'] = memkeeper_vars.upload_dir
 
 # Redirect root to view
 @app.route('/', methods=['GET'])
@@ -34,9 +36,9 @@ def render_view_page():
 @app.route('/memory/add', methods=['POST'])
 def add_memory():
 	if request.method == "POST":
-		memory = Memory(request.form,request.files,app.config['UPLOAD_FOLDER'])
+		memory = Memory(request.form,request.files)
 		mc.add(memory)
-		return jsonify({'Flask Server':"Memory added"})
+		return jsonify({'Flask Server':'Memory added'})
 
 # Create Route to get Data for a Memory (via a Memory ID)
 @app.route('/memory/get', methods=['POST'])
@@ -60,7 +62,7 @@ def add_images_to_memory():
 	if request.method == 'POST':
 		memory = mc.get(request.form["id"])
 		added_images = memory.add_images(request.files)
-	return jsonify({"img_paths":added_images})
+	return jsonify({"img_paths":memory.get_imgPaths()})
 
 # Create Route to Remove Image from Existing Memory
 @app.route("/image/remove", methods = ['POST'])
