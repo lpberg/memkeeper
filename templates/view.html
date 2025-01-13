@@ -18,21 +18,12 @@ function requestData(endpoint,body) {
     }).catch(error => {console.error('There has been a problem with your fetch operation:', error);});
 }
 
-function updateHTML(data) {
-   document.getElementById("mem_item").innerHTML = data["title"]+data["desc"]+data["dt"];
-}
-
-function viewMemory(e) {
-    data = {"id":e.getAttribute("data-memoryid")}
-    requestData("/get_memory",data)
-}
-
 function toggleMemoryList() {
    document.getElementById("mem_list").hidden = !document.getElementById("mem_list").hidden;
 }
 </script> 
-<div class="columns wrapper">
-	<div class="column is-two-fifths memory-form-col">
+<div class="grid grid-cols-3 wrapper">
+	<div class="memory-form-col">
 		<div class="memory-form">
 			<div class="brand">MemKeeper</div>
 			<label class="checkbox">
@@ -41,31 +32,30 @@ function toggleMemoryList() {
 			</label>
 			<h2 class="title">Add New</h2>
 			{% include "add_form.html" %}
-			<!-- <input type="button" onclick="toggleMemoryList()" value="Toggle List" class="button is-link is-medium"> -->
-			
 		</div>
 	</div>
-	<div class="column memories">
-		<div id="mem_list">
+	<div class="memories">
+		<div id="mem_list" class="prose">
 			<h1 class="title">Memories</h1>
 			<div class="columns">
 			{% for id,memory in memories.items() %}
 			<div class="column">
 				<div class="card">
-					<div class="card-content">
-						<h2 class="subtitle"><a data-memoryid="{{ memory.id }}" onclick="viewMemory(this)">{{ memory.title }}</a></h2>
+					<article class="prose card-content">
+						<h2>
+							<a data-memoryid="{{ memory.id }}" onclick="viewMemory(this)">{{ memory.title }}</a>
+						</h2>
 						<p>{{ memory.desc }}</p> 
 						<p>{{ memory.dt }}</p>
 						<p>{{ memory.created_dt }}</p>
 						<img src="{{memory.img_paths[0]}}" />
-					</div>
+					</article>
 				</div>
 			</div>
 			{% endfor %}
 			</div>
 		</div>
-		<div id="mem_item">
-		</div>
+		{% include "view_single.html" %}
 	</div>
 </div>
 

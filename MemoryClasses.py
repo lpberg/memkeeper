@@ -4,6 +4,8 @@ import uuid
 import json
 from datetime import datetime
 
+ACCEPTED_IMG_FORMATS = {".jpg",".jpeg",".png",".gif"}
+
 class MemoryCollection:
 	def __init__(self,memory_dir="memories"):
 		self.memory_dir = memory_dir
@@ -26,7 +28,7 @@ class MemoryCollection:
 			data[id] = memory.get_data()
 		return(data)
 	def writeFile(self,memory):
-		filename = self.memory_dir+"/"+str(memory.get_id())+".json"
+		filename = os.path.join(self.memory_dir,str(memory.get_id())+".json")
 		with open(filename, "w") as outfile:
 			outfile.write(json.dumps(memory.get_data(), indent=4))
 		outfile.close()
@@ -34,7 +36,7 @@ class MemoryCollection:
 		for id, memory in self.memories.items():
 			self.writeFile(memory)
 	def readFile(self,file):
-		filename = self.memory_dir+"/"+file
+		filename = os.path.join(self.memory_dir,file)
 		infile = open(filename, 'r')
 		json_object_from_file = json.load(infile)
 		self.add(Memory(json_object_from_file))
@@ -45,24 +47,48 @@ class MemoryCollection:
 				self.readFile(file)
 
 class Memory:
-	def __init__(self,data):
+	def __init__(self,request_form,request_files=[],upload_folder="./static/uploads/images"):
+		# New memories need an id
 		self.id = str(uuid.uuid1())
+		# Memories loaded from file have an id already
+		if "id" in request_form.keys():
+			self.id = request_form["id"]
+		self.upload_dir = os.path.join(upload_folder,self.get_id())
 		self.created_dt = datetime.now()
+		# Memories loaded from file have created_dt already
+		if "created_dt" in request_form.keys():
+			self.created_dt = datetime.strptime(request_form["created_dt"], "%m/%d/%Y %H:%M:%S")
 		self.dt = datetime.now()
+		# Memories loadded from file have dt already
+		if "dt" in request_form.keys():
+			self.dt = datetime.strptime(request_form["dt"], "%m/%d/%Y %H:%M:%S")
+		self.title = request_form["title"]
+		self.desc = request_form["desc"]
 		self.img_paths = []
-		if "id" in data.keys():
-			self.id = data["id"]
-		if "created_dt" in data.keys():
-			self.created_dt = datetime.strptime(data["created_dt"], "%m/%d/%Y %H:%M:%S")
-		if "dt" in data.keys():
-			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
-		if "img_paths" in data.keys():
-			if len(data["img_paths"])>0:
-				for path in data["img_paths"]:
-					if path not in self.img_paths:
-						self.img_paths.append(path)
-		self.title = data["title"]
-		self.desc = data["desc"]
+		if "img_paths" in request_form.keys():
+			self.img_paths = request_form["img_paths"]
+		self.add_images(request_files)
+	def add_images(self,request_files):
+		added_img_paths = []
+		if not os.path.exists(self.upload_dir):
+			os.makedirs(self.upload_dir)
+		for file_item in request_files:
+			file = request_files[file_item]
+			if file:
+				if os.path.splitext(file.filename)[1] in ACCEPTED_IMG_FORMATS:
+					path = os.path.join(self.upload_dir,file.filename)
+					file.save(path)
+					self.img_paths.append(path)
+					added_img_paths.append(path)
+		return added_img_paths
+	def remove_image(self,path):
+		if path in self.img_paths:
+			self.img_paths.remove(path)
+		if os.path.exists(path):
+			os.remove(path)
+		if (path not in self.img_paths) and not (os.path.exists(path)):
+			return True
+		return False
 	def get_id(self):
 		return(self.id)
 	def get_title(self):
@@ -87,7 +113,14 @@ class Memory:
 		if "dt" in data.keys():
 			self.dt = datetime.strptime(data["dt"], "%m/%d/%Y %H:%M:%S")
 		if "img_paths" in data.keys():
-			# TODO: Consider overwriting list vs conditional appending
 			self.img_paths = data["img_paths"]
 	def get_data(self):
-		return({"title":self.title,"desc":self.desc,"id":self.id,"created_dt":self.get_created_dt_str(),"dt":self.get_dt_str(),"img_paths":self.img_paths})
+		data = {
+			"title":self.title,
+			"desc":self.desc,
+			"id":self.id,
+			"created_dt":self.get_created_dt_str(),
+			"dt":self.get_dt_str(),
+			"img_paths":self.img_paths
+		}
+		return(data)
