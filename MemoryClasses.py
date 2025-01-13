@@ -1,14 +1,18 @@
 import os
-import memkeeper_vars
 import sys
 import uuid
 import json
 from datetime import datetime
+import configparser
+
+# Load configuration file
+app_config = configparser.ConfigParser()
+app_config.read('config.ini')
 
 ACCEPTED_IMG_FORMATS = {".jpg",".jpeg",".png",".gif"}
 
 class MemoryCollection:
-	def __init__(self,memory_dir=memkeeper_vars.memories_dir):
+	def __init__(self,memory_dir=app_config.get("app","memory_dir")):
 		self.memory_dir = memory_dir
 		self.memories = {}
 		self.readFiles()
@@ -54,7 +58,7 @@ class Memory:
 		# Memories loaded from file have an id already
 		if "id" in request_form.keys():
 			self.id = request_form["id"]
-		self.upload_dir = os.path.join(memkeeper_vars.upload_dir,self.get_id())
+		self.upload_dir = os.path.join(app_config.get("app","upload_dir"),self.get_id())
 		self.created_dt = datetime.now()
 		# Memories loaded from file have created_dt already
 		if "created_dt" in request_form.keys():

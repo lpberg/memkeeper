@@ -6,6 +6,7 @@ services:
     network_mode: host
     volumes:
       - ./memories:/app/memories
+      - ./config.ini:/app/config.ini
       - ./static/uploads:/app/static/uploads
     ports:
       - 5002:5002

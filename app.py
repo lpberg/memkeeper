@@ -1,26 +1,31 @@
 # Import / Load Libraries
 from flask import Flask, jsonify, render_template, request, redirect
 from werkzeug.utils import secure_filename
-# Import variable file
-import memkeeper_vars
 import uuid
 import sys
 import os
+import configparser
 # Import / Load Custom Written Libraries
 from MemoryClasses import Memory, MemoryCollection
+
+# Load configuration file
+app_config = configparser.ConfigParser()
+app_config.read('config.ini')
+upload_dir = app_config.get("app","upload_dir")
+memory_dir = app_config.get("app","memory_dir")
 
 # Helper Function (to ensure print statements show up in python console)
 def flaskprint(str):
 	print(str, file=sys.stderr)
 
 # Create MemoryCollection Object (helps read/write/manage Memory objects)
-mc = MemoryCollection(memkeeper_vars.memories_dir)
+mc = MemoryCollection(app_config.get("app","memory_dir"))
 
 # Create Flask Application
 app = Flask(__name__)
 
 # Set upload directory - flask requires use of static dir
-app.config['UPLOAD_FOLDER'] = memkeeper_vars.upload_dir
+app.config['UPLOAD_FOLDER'] = app_config.get("app","upload_dir")
 
 # Redirect root to view
 @app.route('/', methods=['GET'])
