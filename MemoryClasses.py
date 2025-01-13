@@ -12,8 +12,8 @@ app_config.read('config.ini')
 ACCEPTED_IMG_FORMATS = {".jpg",".jpeg",".png",".gif"}
 
 class MemoryCollection:
-	def __init__(self,memory_dir=app_config.get("app","memory_dir")):
-		self.memory_dir = memory_dir
+	def __init__(self):
+		self.memory_dir = app_config.get("app","memory_dir")
 		self.memories = {}
 		self.readFiles()
 	def get(self,id):

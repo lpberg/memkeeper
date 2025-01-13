@@ -11,15 +11,13 @@ from MemoryClasses import Memory, MemoryCollection
 # Load configuration file
 app_config = configparser.ConfigParser()
 app_config.read('config.ini')
-upload_dir = app_config.get("app","upload_dir")
-memory_dir = app_config.get("app","memory_dir")
 
 # Helper Function (to ensure print statements show up in python console)
 def flaskprint(str):
 	print(str, file=sys.stderr)
 
 # Create MemoryCollection Object (helps read/write/manage Memory objects)
-mc = MemoryCollection(app_config.get("app","memory_dir"))
+mc = MemoryCollection()
 
 # Create Flask Application
 app = Flask(__name__)
@@ -30,7 +28,7 @@ app.config['UPLOAD_FOLDER'] = app_config.get("app","upload_dir")
 # Redirect root to view
 @app.route('/', methods=['GET'])
 def render_index_page():
-	return render_template("view.html",memories = mc.get_data())
+	return redirect("/view")
 
 # Create Route for Index Page
 @app.route('/view', methods=['GET'])
