@@ -1,5 +1,5 @@
 __pycache__/
-*.json
+memories/*.json
 node_modules
 static/styles.css.map
 static/uploads/images/*
